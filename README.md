@@ -21,6 +21,10 @@ The goal is to create a Lexer plugin project, as a starting point or template fo
 It is meant for finding out how to set it up and apply it [my other plugin](https://github.com/BdR76/CSVLint).
 Also see this [forum post](https://community.notepad-plus-plus.org/topic/21124/c-adding-a-custom-styler-or-lexer-in-c-for-scintilla-notepad/6)
 
+See mockup below, the plug-in doesn't work like this yet, it is a goal mock-up screenshot
+
+![preview screenshot](/mockup_preview.png?raw=true "Lexer plug-in example, goal preview")
+
 See also
 --------
 This plugin is based on the [NotepadPlusPlusPluginPack.Net](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net)
