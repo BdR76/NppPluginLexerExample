@@ -21,3 +21,26 @@ $RECYCLE.BIN/
 # =========================
 # Operating System Files
 # =========================
+LexerPlugin/.vs/NppManagedPluginDemo/v14/.suo
+LexerPlugin/.vs/NppManagedPluginDemo/v16/.suo
+LexerPlugin/.vs/NppManagedPluginDemo/v16/Server/sqlite3/db.lock
+LexerPlugin/.vs/NppManagedPluginDemo/v16/Server/sqlite3/storage.ide
+LexerPlugin/.vs/NppManagedPluginDemo/v16/Server/sqlite3/storage.ide-shm
+LexerPlugin/.vs/NppManagedPluginDemo/v16/Server/sqlite3/storage.ide-wal
+LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/Demo.dll
+LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/Demo.pdb
+LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/Kbg.Demo.Namespace.frmGoToLine.resources
+*.cache
+LexerPlugin/NppManagedPluginDemo/obj/x86/Debug/Kbg.Demo.Namespace.frmLexerSettings.resources
+LexerPlugin/NppManagedPluginDemo/obj/x86/Debug/TempPE/Properties.Resources1.Designer.cs.dll
+LexerPlugin/NppManagedPluginDemo/obj/x86/Debug/NppPluginNET.Properties.Resources.resources
+LexerPlugin/NppManagedPluginDemo/obj/x86/Debug/NppManagedPluginDemo.csproj.FileListAbsolute.txt
+todo.txt
+lexer_bmp.bmp
+LexerPlugin/NppManagedPluginDemo/obj/x86/Debug/NppLexerPlugin.csproj.FileListAbsolute.txt
+LexerPlugin/NppManagedPluginDemo/obj/x86/Debug/Demo.pdb
+LexerPlugin/NppManagedPluginDemo/obj/x86/Debug/Demo.dll
+LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/NppPluginNET.Properties.Resources.resources
+LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/NppManagedPluginDemo.csproj.FileListAbsolute.txt
+lexer.png
