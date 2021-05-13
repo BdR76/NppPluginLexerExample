@@ -349,9 +349,9 @@ namespace Kbg.NppPluginNET
             int length = (int)length_doc;
 
             // start position
-            int style_used = editor.GetStyleAt(start);
-            editor.StartStyling(start, 0);
-            editor.SetStyling((int)length_doc, style_used == 0 ? 3 : 0);
+            //int style_used = editor.GetStyleAt(start);
+            //editor.StartStyling(start, 0);
+            //editor.SetStyling((int)length_doc, style_used == 0 ? 3 : 0);
 
             // get line positions
             int line = editor.LineFromPosition(start);
@@ -360,7 +360,7 @@ namespace Kbg.NppPluginNET
             int LineEnd = editor.GetLineEndPosition(line);
 
             // loop through all lines
-            while ((LineEnd < length) && (LineStart != LineEnd))
+            while ((LineEnd <= length) && (LineStart != LineEnd))
             {
                 // style this line
                 string tag = "";
@@ -374,7 +374,7 @@ namespace Kbg.NppPluginNET
 
                 // line belong to segment?
                 int idx = 0;
-                if (segs1.Contains(tag)) idx = 4;
+                if (segs1.Contains(tag)) idx = 3;
                 if (segs2.Contains(tag)) idx = 5;
                 if (segs3.Contains(tag)) idx = 6;
                 if (segs4.Contains(tag)) idx = 7;
