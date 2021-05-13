@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="Windows-1252" ?>
+<NotepadPlus>
+    <Languages>
+        <!-- name must be the same as the one in the language menu. -->
+        <!-- ext here is the default one. -->
+        <!-- Comments are the comment that is used from the context menu when you tell np++ to comment a line. -->
+        <Language name="EdifactLexer" ext="edi" commentLine="#" commentStart="#[" commentEnd="]#">
+          <Keywords name="0">no keywords</Keywords>
+        </Language>
+    </Languages>
+    <LexerStyles>
+        <!-- name must be the same as the Language name above. -->
+        <!-- desc is what shows up in the styler configuator. -->
+        <!-- ext is the "user defined" one. -->
+        <!-- excluded is whether is shows up in the language menu. (Can be changed in the settings by the user the normal way.) -->
+        <LexerType name="EdifactLexer" desc="My Example Lexer Demo" excluded="no">
+            <!-- name is what shows up in the styler config for that style. -->
+            <!-- styleID can be 0 through 31. -->
+            <!-- keywordClass can be a number between 0 and 8 or the words that are normally used. -->
+            <WordsStyle styleID="0" name="Default" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle styleID="1" name="SegmentsLevel1" fgColor="400000" bgColor="FF8080" fontName="" fontStyle="0" />
+            <WordsStyle styleID="2" name="SegmentsLevel2" fgColor="402000" bgColor="FF8000" fontName="" fontStyle="1" />
+            <WordsStyle styleID="3" name="SegmentsLevel3" fgColor="404000" bgColor="FFFF80" fontName="" fontStyle="0" />
+            <WordsStyle styleID="4" name="SegmentsLevel4" fgColor="004000" bgColor="80FF80" fontName="" fontStyle="0" />
+            <WordsStyle styleID="5" name="SegmentsLevel5" fgColor="004040" bgColor="32FFBE" fontName="" fontStyle="0" />
+            <WordsStyle styleID="6" name="SegmentsLevel6" fgColor="002040" bgColor="BCCCFF" fontName="" fontStyle="0" />
+            <WordsStyle styleID="7" name="SegmentsLevel7" fgColor="200040" bgColor="FFD0FF" fontName="" fontStyle="0" />
+            <WordsStyle styleID="8" name="SegmentsLevel8" fgColor="400040" bgColor="FF80FF" fontName="" fontStyle="0" />
+            <WordsStyle styleID="9" name="HiglightNumeric" fgColor="404000" bgColor="FFFF00" fontName="" fontStyle="0" />
+        </LexerType>
+    </LexerStyles>
+</NotepadPlus>
+
+

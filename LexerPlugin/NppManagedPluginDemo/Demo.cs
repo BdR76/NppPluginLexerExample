@@ -51,7 +51,7 @@ namespace Kbg.Demo.Namespace
     class Main
     {
         #region " Fields "
-        internal const string PluginName = "NppManagedPluginDemo";
+        internal const string PluginName = "EdifactLexer";
         static string iniFilePath = null;
         static string sectionName = "Insert Extension";
         static string keyName = "doCloseTag";

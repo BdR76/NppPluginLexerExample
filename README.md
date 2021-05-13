@@ -3,7 +3,7 @@ Lexer example C# - Notepad++ plugin
 
 This is an example of a Lexer, it is meant to explore how to setup a C# project with a custom lexer code.
 The syntax highlighting is based on user configuration in a window which can change at run-time.
-It applies syntax highlighting to EDIFACT data files.
+It should apply highlighting to EDIFACT data files.
 This is just an example code project, it's not meant to be a full EDIFACT editor.
 
 Lexer datafiles
@@ -27,7 +27,8 @@ See mockup below, the plug-in doesn't work like this yet, it is a goal mock-up s
 
 See also
 --------
-This plugin is based on the [NotepadPlusPlusPluginPack.Net](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net)
+This plugin is based on the [NotepadPlusPlusPluginPack.Net](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net),
+with help from members of the [Notepad++ development community](https://community.notepad-plus-plus.org/topic/21124/c-adding-a-custom-styler-or-lexer-in-c-for-scintilla-notepad/11)
 
 History
 -------
