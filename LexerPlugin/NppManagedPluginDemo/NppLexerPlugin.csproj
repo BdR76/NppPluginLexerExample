@@ -40,7 +40,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-x64</OutputPath>
+    <OutputPath>..\..\..\..\..\Tests\npp\795\npp.7.9.5.portable.x64\plugins\EdifactLexer\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -121,6 +121,7 @@
       <DependentUpon>frmLexerSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Demo.cs" />
+    <Compile Include="PluginInfrastructure\Lexer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
