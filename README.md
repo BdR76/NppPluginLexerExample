@@ -25,6 +25,17 @@ See mockup below, the plug-in doesn't work like this yet, it is a goal mock-up s
 
 ![preview screenshot](/mockup_preview.png?raw=true "Lexer plug-in example, goal preview")
 
+How to install
+--------------
+
+* copy the file [.\LexerPlugin\NppManagedPluginDemo\bin\Release\EdifactLexer.dll](/LexerPlugin/NppManagedPluginDemo/bin/Release/)
+* to new folder .\Program Files (x86)\Notepad++\plugins\EdifactLexer\EdifactLexer.dll
+
+For the 64-bit version it is the same, except the output file is in the
+[Release-x64](/LexerPlugin/NppManagedPluginDemo/bin/Release-x64/) folder and Notepad++ is
+in the `.\Program Files\Notepad++\` folder.
+
+
 See also
 --------
 This plugin is based on the [NotepadPlusPlusPluginPack.Net](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net),
