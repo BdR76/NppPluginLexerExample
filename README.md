@@ -27,6 +27,8 @@ See mockup below, the plug-in doesn't work like this yet, it is a goal mock-up s
 
 How to install
 --------------
+You can try the file `EdifactLexer.dll`. In your \Notepad++\plugins\ folder,
+create a new folder `EdifactLexer` and place the .dll file there, so:
 
 * copy the file [.\LexerPlugin\NppManagedPluginDemo\bin\Release\EdifactLexer.dll](/LexerPlugin/NppManagedPluginDemo/bin/Release/)
 * to new folder .\Program Files (x86)\Notepad++\plugins\EdifactLexer\EdifactLexer.dll
@@ -35,6 +37,7 @@ For the 64-bit version it is the same, except the output file is in the
 [Release-x64](/LexerPlugin/NppManagedPluginDemo/bin/Release-x64/) folder and Notepad++ is
 in the `.\Program Files\Notepad++\` folder.
 
+Also copy the file [EdifactLexer.xml](./config/) to your `.\Program Files\Notepad++\plugins\Config\` folder, this file contains the settings for the  text styling.
 
 See also
 --------
