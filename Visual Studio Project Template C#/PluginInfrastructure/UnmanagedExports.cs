@@ -104,12 +104,14 @@ namespace Kbg.NppPluginNET
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate IntPtr ILexerImpDelegate();
 
+        static ILexerImpDelegate ILexerImplementation;
+
         [DllExport(CallingConvention = CallingConvention.StdCall)]
         static Delegate GetLexerFactory(int index)
         {
             // function will be called by scintilla only
             // index is always 0 if this dll has only one lexer
-            ILexerImpDelegate ILexerImplementation = new ILexerImpDelegate(ILexer.ILexerImplementation);
+            ILexerImplementation = new ILexerImpDelegate(ILexer.ILexerImplementation);
             return ILexerImplementation;
         }
         #endregion
