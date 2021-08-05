@@ -5,8 +5,6 @@ This is an example of a Lexer, it is meant to explore how to setup a C# project 
 It applies highlighting to EDIFACT data files. The syntax highlighting colors and keywords are based on user configuration in the [EdifactLexer.xml](/config/EdifactLexer.xml) file.
 This is just an example code project, it's not meant to be a full EDIFACT editor.
 
-[EdifactLexer.xml](/config/EdifactLexer.xml)
-
 Lexer datafiles
 ---------------
 The lexer example is slightly different compared to a Lexer for a programming or scripting files.
