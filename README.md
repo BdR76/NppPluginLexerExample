@@ -45,7 +45,7 @@ with help from members of the [Notepad++ development community](https://communit
 
 History
 -------
-21-may-2021 - additional code
+21-may-2021 - additional code   
 08-may-2021 - first test release
 
 BdR©2021 Free to use - send questions or comments: Bas de Reuver - bdr1976@gmail.com
