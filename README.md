@@ -1,21 +1,32 @@
 Lexer example C# - Notepad++ plugin
 ===================================
 
-This is an example of a Lexer, it is meant to explore how to setup a C# project with custom lexer code.
-It applies highlighting to EDIFACT data files. The syntax highlighting colors and keywords are based on user configuration in the [EdifactLexer.xml](/config/EdifactLexer.xml) file.
+In Notepad++ the Lexer and Folder functions are used to add syntax highlighting and folding options to a text file.
+[Syntax highlighting](https://en.wikipedia.org/wiki/Syntax_highlighting) means displaying words or text parts
+in a different color so that it's easier to read, write and find errors.
+[Folding](https://en.wikipedia.org/wiki/Code_folding) means grouping parts of text
+and allowing the user to show or hide those parts using expand [+] or collapse [-] icons in the sidebar.
+
+This is an example project that applies syntax highlighting and folding to EDIFACT data files.
+It is meant to show how to setup a C# project with custom `Lex()` and `Fold()` methods.
+
+The syntax highlighting colors and keywords are based on user configuration
+in the [EdifactLexer.xml](/config/EdifactLexer.xml) file.
 This is just an example code project, it's not meant to be a full EDIFACT editor.
 
-Lexer datafiles
----------------
-The lexer example is slightly different compared to a Lexer for a programming or scripting files.
-But the code project can technically be used to create any lexer in C#.
+Custom Lexer
+------------
+You can create a custom Lexer for new unsupported programming languages, data files or other structured text files.
+This lexer example is for data files, but technically it is very similar compared to a Lexer for source files.
 
-For data files, the highlighting rules can be the same for all data files, like segment names in Edifact which can be set as keywords in [Settings > Style configurator](/config/EdifactLexer.xml).
-For other data files like character separated data, the separator character can be differ per file and the user has to somehow set it at run-time.
+Syntax highlighting rules can be the same for all files,
+like segment names in Edifact which can be set as keywords in [Settings > Style configurator](/config/EdifactLexer.xml).
+For other types of files like character separated values, the separator character can be different per file
+and the user has to somehow set it at run-time.
 
-Goal
-----
-The goal is to create a Lexer plugin project, as a starting point or template for plugin creation.
+Template Project
+----------------
+The goal is to create a Lexer plugin project, as a starting point or template for programming new plug-ins.
 
 It is meant for finding out how to set it up and apply it [my other plugin](https://github.com/BdR76/CSVLint).
 Also see this [forum post](https://community.notepad-plus-plus.org/topic/21124/c-adding-a-custom-styler-or-lexer-in-c-for-scintilla-notepad/6)
