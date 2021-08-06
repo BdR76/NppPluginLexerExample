@@ -46,3 +46,6 @@ LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/NppManagedPluginDemo.csproj.FileL
 lexer.png
 /LexerPlugin/NppManagedPluginDemo/*.csproj
 /LexerPlugin/NppManagedPluginDemo/bin
+/LexerPlugin/.vs
+/LexerPlugin/NppManagedPluginDemo/*.user
+/LexerPlugin/NppManagedPluginDemo/obj
