@@ -563,6 +563,8 @@ namespace NppPluginNET.PluginInfrastructure
                 cur_line++;
                 cur_level = next_level;
             }
+            // free allocated buffer
+            Marshal.FreeHGlobal(buffer_ptr);
         }
 
         // virtual int SCI_METHOD NamedStyles() = 0;
