@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+//using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
+//using System.Text;
 using Kbg.NppPluginNET.PluginInfrastructure;
 
 namespace NppPluginNET.PluginInfrastructure
@@ -11,7 +12,7 @@ namespace NppPluginNET.PluginInfrastructure
         public static readonly string Name = "EdifactLexer\0";
         public static readonly string StatusText = "My Edifact Lexer example\0";
 
-        static IScintillaGateway editor = new ScintillaGateway(PluginBase.GetCurrentScintilla());
+        //static IScintillaGateway editor = new ScintillaGateway(PluginBase.GetCurrentScintilla());
 
         // Keywords
         static List<string> Segs1; // = new List<string> { "UNA", "UNB", "UNH", "UNT", "UNZ", "BGM" };
@@ -47,6 +48,119 @@ namespace NppPluginNET.PluginInfrastructure
         static List<string> TagsOfStyleList = new List<string> { "default" };
         static List<string> DescriptionOfStyleList = new List<string> { "Default style" };
 
+
+        #region IDocument
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int IDocumentVersion(IntPtr instance);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void IDocumentSetErrorStatus(IntPtr instance, int status);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate IntPtr IDocumentLength(IntPtr instance);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void IDocumentGetCharRange(IntPtr instance, IntPtr buffer, IntPtr position, IntPtr lengthRetrieve);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate char IDocumentStyleAt(IntPtr instance, IntPtr position);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate IntPtr IDocumentLineFromPosition(IntPtr instance, IntPtr position);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate IntPtr IDocumentLineStart(IntPtr instance, IntPtr line);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int IDocumentGetLevel(IntPtr instance, IntPtr line);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int IDocumentSetLevel(IntPtr instance, IntPtr line, int level);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int IDocumentGetLineState(IntPtr instance, IntPtr line);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int IDocumentSetLineState(IntPtr instance, IntPtr line, int state);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void IDocumentStartStyling(IntPtr instance, IntPtr position);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate bool IDocumentSetStyleFor(IntPtr instance, IntPtr length, char style);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate bool IDocumentSetStyles(IntPtr instance, IntPtr length, IntPtr styles);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void IDocumentDecorationSetCurrentIndicator(IntPtr instance, int indicator);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void IDocumentDecorationFillRange(IntPtr instance, IntPtr position, int value, IntPtr fillLength);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void IDocumentChangeLexerState(IntPtr instance, IntPtr start, IntPtr end);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int IDocumentCodePage(IntPtr instance);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate bool IDocumentIsDBCSLeadByte(IntPtr instance, char ch);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate IntPtr IDocumentBufferPointer(IntPtr instance);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int IDocumentGetLineIndentation(IntPtr instance, IntPtr line);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate IntPtr IDocumentLineEnd(IntPtr instance, IntPtr line);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate IntPtr IDocumentGetRelativePosition(IntPtr instance, IntPtr positionStart, IntPtr characterOffset);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int IDocumentGetCharacterAndWidth(IntPtr instance, IntPtr position, IntPtr pWidth);
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct IDocumentVtable
+        {
+            public IDocumentVersion Version;
+            public IDocumentSetErrorStatus SetErrorStatus;
+            public IDocumentLength Length;
+            public IDocumentGetCharRange GetCharRange;
+            public IDocumentStyleAt StyleAt;
+            public IDocumentLineFromPosition LineFromPosition;
+            public IDocumentLineStart LineStart;
+            public IDocumentGetLevel GetLevel;
+            public IDocumentSetLevel SetLevel;
+            public IDocumentGetLineState GetLineState;
+            public IDocumentSetLineState SetLineState;
+            public IDocumentStartStyling StartStyling;
+            public IDocumentSetStyleFor SetStyleFor;
+            public IDocumentSetStyles SetStyles;
+            public IDocumentDecorationSetCurrentIndicator DecorationSetCurrentIndicator;
+            public IDocumentDecorationFillRange DecorationFillRange;
+            public IDocumentChangeLexerState ChangeLexerState;
+            public IDocumentCodePage CodePage;
+            public IDocumentIsDBCSLeadByte IsDBCSLeadByte;
+            public IDocumentBufferPointer BufferPointer;
+            public IDocumentGetLineIndentation GetLineIndentation;
+            public IDocumentLineEnd LineEnd;
+            public IDocumentGetRelativePosition GetRelativePosition;
+            public IDocumentGetCharacterAndWidth GetCharacterAndWidth;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct IDocument
+        {
+            public IntPtr VTable;
+        }
+        #endregion IDocument
+
+
+        #region ILexer
         // 1. since cpp defines this as an interface with virtual functions, 
         //      there is an implicit first parameter, the class instance
         // 2. according to c# documentation delegates are used to simulate function pointers
@@ -155,6 +269,7 @@ namespace NppPluginNET.PluginInfrastructure
             public ILexerTagsOfStyle TagsOfStyle;
             public ILexerDescriptionOfStyle DescriptionOfStyle;
         }
+        #endregion ILexer
 
         static ILexer4 ilexer4 = new ILexer4 { };
 
@@ -201,7 +316,7 @@ namespace NppPluginNET.PluginInfrastructure
              * lvRelease5 for ILexer5 and lvRelease4 for ILexer4. 
              * ILexer5 must be provided for Scintilla version 5.0 or later.
              */
-            GC.Collect();  // test to see if the methods do get garbage collected
+            //GC.Collect();  // test to see if the methods do get garbage collected
             return 2;
         }
 
@@ -292,36 +407,57 @@ namespace NppPluginNET.PluginInfrastructure
              * init_style is the style of last styled byte
              * p_access is the pointer of the IDocument cpp class
              */
-            int start = (int)start_pos;
-            int length = (int)length_doc;
-            IntPtr range_ptr = editor.GetRangePointer(start, length);
-            string content = Marshal.PtrToStringAnsi(range_ptr, length);
 
-            for (int i = 0; i < length; i++)
+            IDocument idoc = (IDocument)Marshal.PtrToStructure(p_access, typeof(IDocument));
+            unsafe
             {
-                int start_position = i;
-                string tag = "";
-                int idx = 0;
+                int length = (int)length_doc;
+                int start = (int)start_pos;
 
-                if (i + 2 < length) { tag = content.Substring(i, 3); }
+                // allocate a buffer
+                IntPtr buffer_ptr = Marshal.AllocHGlobal(length);
+                if (buffer_ptr == IntPtr.Zero) { return; }
 
-                if (Segs1.Contains(tag)) idx = 3;
-                else if (Segs2.Contains(tag)) idx = 5;
-                else if (Segs3.Contains(tag)) idx = 6;
-                else if (Segs4.Contains(tag)) idx = 7;
+                // create the IDocumentVtable structure from the p_access pointer
+                IDocumentVtable vtable = (IDocumentVtable)Marshal.PtrToStructure((IntPtr)idoc.VTable, typeof(IDocumentVtable));
 
-                while (i < length)
+                // scintilla fills the allocated buffer
+                vtable.GetCharRange(p_access, buffer_ptr, (IntPtr)start, (IntPtr)length);
+                if (buffer_ptr == IntPtr.Zero) { return; }
+
+                // convert the buffer into a managed string
+                string content = Marshal.PtrToStringAnsi(buffer_ptr, length);
+
+                for (int i = 0; i < length; i++)
                 {
-                    // read rest of the line
-                    if (content[i] == '\n') { break; }
-                    i++;
+                    int start_position = i;
+                    string tag = "";
+                    int idx = 0;
+
+                    if (i + 2 < length) { tag = content.Substring(i, 3); }
+
+                    if (Segs1.Contains(tag)) idx = 3;
+                    else if (Segs2.Contains(tag)) idx = 5;
+                    else if (Segs3.Contains(tag)) idx = 6;
+                    else if (Segs4.Contains(tag)) idx = 7;
+
+                    while (i < length)
+                    {
+                        // read rest of the line
+                        if (content[i] == '\n') { break; }
+                        i++;
+                    }
+                    // let scintilla style this line
+                    vtable.StartStyling(p_access, (IntPtr)(start + start_position));
+                    vtable.SetStyleFor(p_access, (IntPtr)(i - start_position), (char)idx);
                 }
-                // style this line
-                editor.StartStyling(start + start_position, 0);
-                editor.SetStyling(i - start_position, idx);
+
+                // free allocated buffer
+                Marshal.FreeHGlobal(buffer_ptr);
+
             }
         }
-        
+
         // virtual void SCI_METHOD Fold(Sci_PositionU startPos, i64 lengthDoc, int initStyle, IDocument *pAccess) = 0;
         public static void Fold(IntPtr instance, UIntPtr start_pos, IntPtr length_doc, int init_style, IntPtr p_access)
         {
@@ -341,83 +477,99 @@ namespace NppPluginNET.PluginInfrastructure
              *      so it is easy to see when something breaks.
              */
 
-            int start = (int)start_pos;
-            int length = (int)length_doc;
-            IntPtr range_ptr = editor.GetRangePointer(start, length);
-            string content = Marshal.PtrToStringAnsi(range_ptr, length);
-
-
-            int cur_level = (int)SciMsg.SC_FOLDLEVELBASE;
-            int cur_line = editor.LineFromPosition(start);
-
-            if (cur_line > 0)
+            IDocument idoc = (IDocument)Marshal.PtrToStructure(p_access, typeof(IDocument));
+            unsafe
             {
-                int prev_level = (int)editor.GetFoldLevel(cur_line - 1);
-                bool header_flag_set = (prev_level & (int)SciMsg.SC_FOLDLEVELHEADERFLAG) == (int)SciMsg.SC_FOLDLEVELHEADERFLAG;
+                int length = (int)length_doc;
+                int start = (int)start_pos;
 
-                if (header_flag_set)
+                // allocate a buffer
+                IntPtr buffer_ptr = Marshal.AllocHGlobal(length);
+                if (buffer_ptr == IntPtr.Zero) { return; }
+
+                // create the IDocumentVtable structure from the p_access pointer
+                IDocumentVtable vtable = (IDocumentVtable)Marshal.PtrToStructure((IntPtr)idoc.VTable, typeof(IDocumentVtable));
+
+                // scintilla fills the allocated buffer
+                vtable.GetCharRange(p_access, buffer_ptr, (IntPtr)start, (IntPtr)length);
+                if (buffer_ptr == IntPtr.Zero) { return; }
+
+                // convert the buffer into a managed string
+                string content = Marshal.PtrToStringAnsi(buffer_ptr, length);
+
+
+                int cur_level = (int)SciMsg.SC_FOLDLEVELBASE;
+                int cur_line = (int)vtable.LineFromPosition(p_access, (IntPtr)start);
+
+                if (cur_line > 0)
                 {
-                    cur_level = (prev_level & (int)SciMsg.SC_FOLDLEVELNUMBERMASK) + 1;
+                    int prev_level = (int)vtable.GetLevel(p_access, (IntPtr)(cur_line - 1));
+                    bool header_flag_set = (prev_level & (int)SciMsg.SC_FOLDLEVELHEADERFLAG) == (int)SciMsg.SC_FOLDLEVELHEADERFLAG;
+
+                    if (header_flag_set)
+                    {
+                        cur_level = (prev_level & (int)SciMsg.SC_FOLDLEVELNUMBERMASK) + 1;
+                    }
+                    else
+                    {
+                        cur_level = (prev_level & (int)SciMsg.SC_FOLDLEVELNUMBERMASK);
+                    }
                 }
-                else
+
+                int next_level = cur_level;
+
+                for (int i = 0; i < length; i++)
                 {
-                    cur_level = (prev_level & (int)SciMsg.SC_FOLDLEVELNUMBERMASK);
-                }
-            }
 
-            int next_level = cur_level;
+                    if (!SupportedProperties["fold"])
+                    {
+                        vtable.SetLevel(p_access, (IntPtr)cur_line, (int)SciMsg.SC_FOLDLEVELBASE);
+                        while (i < length)
+                        {
+                            // read rest of the line
+                            if (content[i] == '\n') { break; }
+                            i++;
+                        }
+                        cur_line++;
+                        continue;
+                    }
 
-            for (int i = 0; i < length; i++)
-            {
+                    string tag = "";
+                    if (i + 2 < length) { tag = content.Substring(i, 3); }
 
-                if (!SupportedProperties["fold"])
-                {
-                    editor.SetFoldLevel(cur_line, (int)SciMsg.SC_FOLDLEVELBASE);
+
+                    if (FoldOpeningTags.Contains(tag))
+                    {
+                        next_level++;
+                        cur_level |= (int)SciMsg.SC_FOLDLEVELHEADERFLAG;
+                    }
+                    else if (FoldClosingTags.Contains(tag))
+                    {
+                        next_level--;
+                        if (SupportedProperties["fold.compact"]) { cur_level--; }
+                        cur_level &= (int)SciMsg.SC_FOLDLEVELNUMBERMASK;
+                    }
+                    else
+                    {
+                        cur_level &= (int)SciMsg.SC_FOLDLEVELNUMBERMASK;
+                    }
+
                     while (i < length)
                     {
                         // read rest of the line
                         if (content[i] == '\n') { break; }
                         i++;
                     }
+                    // set fold level
+                    if (cur_level < (int)SciMsg.SC_FOLDLEVELBASE)
+                    {
+                        cur_level = (int)SciMsg.SC_FOLDLEVELBASE;
+                    }
+                    vtable.SetLevel(p_access, (IntPtr)cur_line, cur_level);
                     cur_line++;
-                    continue;
-                }
+                    cur_level = next_level;
 
-                string tag = "";
-                if (i + 2 < length) { tag = content.Substring(i, 3); }
-
-
-                if (FoldOpeningTags.Contains(tag))
-                {
-                    next_level++;
-                    cur_level |= (int)SciMsg.SC_FOLDLEVELHEADERFLAG;
                 }
-                else if (FoldClosingTags.Contains(tag))
-                {
-                    next_level--;
-                    if (SupportedProperties["fold.compact"]) { cur_level--; }
-                    cur_level &= (int)SciMsg.SC_FOLDLEVELNUMBERMASK;
-                }
-                else
-                {
-                    cur_level &= (int)SciMsg.SC_FOLDLEVELNUMBERMASK;
-                }
-
-                while (i < length)
-                {
-                    // read rest of the line
-                    if (content[i] == '\n') { break; }
-                    i++;
-                }
-                // set fold level
-                if (cur_level < (int)SciMsg.SC_FOLDLEVELBASE)
-                {
-                    cur_level = (int)SciMsg.SC_FOLDLEVELBASE;
-                }
-                editor.SetFoldLevel(cur_line, cur_level);
-                cur_line++;
-                cur_level = next_level;
-
             }
         }
 
