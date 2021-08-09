@@ -271,41 +271,45 @@ namespace NppPluginNET.PluginInfrastructure
         #endregion ILexer
 
         static ILexer4 ilexer4 = new ILexer4 { };
-        
+        static IntPtr vtable_pointer = IntPtr.Zero;
+
         public static IntPtr ILexerImplementation()
         {
-            // simulate a c++ vtable by creating an array of 25 function pointers
-            ilexer4.Version = new ILexerVersion(Version);
-            ilexer4.Release = new ILexerRelease(Release);
-            ilexer4.PropertyNames = new ILexerPropertyNames(PropertyNames);
-            ilexer4.PropertyType = new ILexerPropertyType(PropertyType);
-            ilexer4.DescribeProperty = new ILexerDescribeProperty(DescribeProperty);
-            ilexer4.PropertySet = new ILexerPropertySet(PropertySet);
-            ilexer4.DescribeWordListSets = new ILexerDescribeWordListSets(DescribeWordListSets);
-            ilexer4.WordListSet = new ILexerWordListSet(WordListSet);
-            ilexer4.Lex = new ILexerLex(Lex);
-            ilexer4.Fold = new ILexerFold(Fold);
-            ilexer4.PrivateCall = new ILexerPrivateCall(PrivateCall);
-            ilexer4.LineEndTypesSupported = new ILexerLineEndTypesSupported(LineEndTypesSupported);
-            ilexer4.AllocateSubStyles = new ILexerAllocateSubStyles(AllocateSubStyles);
-            ilexer4.SubStylesStart = new ILexerSubStylesStart(SubStylesStart);
-            ilexer4.SubStylesLength = new ILexerSubStylesLength(SubStylesLength);
-            ilexer4.StyleFromSubStyle = new ILexerStyleFromSubStyle(StyleFromSubStyle);
-            ilexer4.PrimaryStyleFromStyle = new ILexerPrimaryStyleFromStyle(PrimaryStyleFromStyle);
-            ilexer4.FreeSubStyles = new ILexerFreeSubStyles(FreeSubStyles);
-            ilexer4.SetIdentifiers = new ILexerSetIdentifiers(SetIdentifiers);
-            ilexer4.DistanceToSecondaryStyles = new ILexerDistanceToSecondaryStyles(DistanceToSecondaryStyles);
-            ilexer4.GetSubStyleBases = new ILexerGetSubStyleBases(GetSubStyleBases);
-            ilexer4.NamedStyles = new ILexerNamedStyles(NamedStyles);
-            ilexer4.NameOfStyle = new ILexerNameOfStyle(NameOfStyle);
-            ilexer4.TagsOfStyle = new ILexerTagsOfStyle(TagsOfStyle);
-            ilexer4.DescriptionOfStyle = new ILexerDescriptionOfStyle(DescriptionOfStyle);
-
-            IntPtr vtable = Marshal.AllocHGlobal(Marshal.SizeOf(ilexer4));
-            Marshal.StructureToPtr(ilexer4, vtable, false);
-            IntPtr vtable_pointer = Marshal.AllocHGlobal(Marshal.SizeOf(vtable));
-            Marshal.StructureToPtr(vtable, vtable_pointer, false);
-            return vtable_pointer;  // return the address of the fake vtable
+            if (vtable_pointer == IntPtr.Zero)
+            {
+                // simulate a c++ vtable by creating an array of 25 function pointers
+                ilexer4.Version = new ILexerVersion(Version);
+                ilexer4.Release = new ILexerRelease(Release);
+                ilexer4.PropertyNames = new ILexerPropertyNames(PropertyNames);
+                ilexer4.PropertyType = new ILexerPropertyType(PropertyType);
+                ilexer4.DescribeProperty = new ILexerDescribeProperty(DescribeProperty);
+                ilexer4.PropertySet = new ILexerPropertySet(PropertySet);
+                ilexer4.DescribeWordListSets = new ILexerDescribeWordListSets(DescribeWordListSets);
+                ilexer4.WordListSet = new ILexerWordListSet(WordListSet);
+                ilexer4.Lex = new ILexerLex(Lex);
+                ilexer4.Fold = new ILexerFold(Fold);
+                ilexer4.PrivateCall = new ILexerPrivateCall(PrivateCall);
+                ilexer4.LineEndTypesSupported = new ILexerLineEndTypesSupported(LineEndTypesSupported);
+                ilexer4.AllocateSubStyles = new ILexerAllocateSubStyles(AllocateSubStyles);
+                ilexer4.SubStylesStart = new ILexerSubStylesStart(SubStylesStart);
+                ilexer4.SubStylesLength = new ILexerSubStylesLength(SubStylesLength);
+                ilexer4.StyleFromSubStyle = new ILexerStyleFromSubStyle(StyleFromSubStyle);
+                ilexer4.PrimaryStyleFromStyle = new ILexerPrimaryStyleFromStyle(PrimaryStyleFromStyle);
+                ilexer4.FreeSubStyles = new ILexerFreeSubStyles(FreeSubStyles);
+                ilexer4.SetIdentifiers = new ILexerSetIdentifiers(SetIdentifiers);
+                ilexer4.DistanceToSecondaryStyles = new ILexerDistanceToSecondaryStyles(DistanceToSecondaryStyles);
+                ilexer4.GetSubStyleBases = new ILexerGetSubStyleBases(GetSubStyleBases);
+                ilexer4.NamedStyles = new ILexerNamedStyles(NamedStyles);
+                ilexer4.NameOfStyle = new ILexerNameOfStyle(NameOfStyle);
+                ilexer4.TagsOfStyle = new ILexerTagsOfStyle(TagsOfStyle);
+                ilexer4.DescriptionOfStyle = new ILexerDescriptionOfStyle(DescriptionOfStyle);
+                IntPtr vtable = Marshal.AllocHGlobal(Marshal.SizeOf(ilexer4));
+                Marshal.StructureToPtr(ilexer4, vtable, false);
+                vtable_pointer = Marshal.AllocHGlobal(Marshal.SizeOf(vtable));
+                Marshal.StructureToPtr(vtable, vtable_pointer, false);
+            }
+            // return the address of the fake vtable
+            return vtable_pointer;
         }
 
         // virtual int SCI_METHOD Version() const = 0
