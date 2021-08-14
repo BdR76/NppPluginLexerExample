@@ -114,6 +114,12 @@
     <Compile Include="..\..\Visual Studio Project Template C#\PluginInfrastructure\UnmanagedExports.cs">
       <Link>PluginInfrastructure\UnmanagedExports.cs</Link>
     </Compile>
+    <Compile Include="Forms\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutForm.designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmLexerSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +144,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmLexerSettings.resx">
       <DependentUpon>frmLexerSettings.cs</DependentUpon>
       <SubType>Designer</SubType>

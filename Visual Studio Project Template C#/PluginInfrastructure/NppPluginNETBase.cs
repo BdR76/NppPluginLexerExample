@@ -22,7 +22,22 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
         {
             SetCommand(index, commandName, functionPointer, new ShortcutKey(), checkOnInit);
         }
-        
+
+        // menuitem with checkmark, toggle visible checkmark on/off
+        internal static void ToggleMenuItem(int idx, ref bool value)
+        {
+
+            // toggle value
+            value = !value;
+
+            Win32.CheckMenuItem(Win32.GetMenu(nppData._nppHandle), _funcItems.Items[idx]._cmdID, Win32.MF_BYCOMMAND | (value ? Win32.MF_CHECKED : Win32.MF_UNCHECKED));
+
+            bool test123 = _funcItems.Items[idx]._init2Check;
+            test123 = false;
+
+            //nppMenu[idx]._init2Check = value;
+        }
+
         internal static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, ShortcutKey shortcut, bool checkOnInit)
         {
             FuncItem funcItem = new FuncItem();
