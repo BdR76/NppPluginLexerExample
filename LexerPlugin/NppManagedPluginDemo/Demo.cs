@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using Kbg.NppPluginNET.PluginInfrastructure;
 using static Kbg.NppPluginNET.PluginInfrastructure.Win32;
 using Kbg.NppPluginNET;
+using NppPluginNET.PluginInfrastructure;
 
 namespace Kbg.NppPluginNET
 {
@@ -148,6 +149,9 @@ namespace Kbg.Demo.Namespace
 
             //PluginBase.ToggleMenuItem(menuitems.menuitemToggleCheckXML, bNumericHighlight);
             PluginBase.ToggleMenuItem(idToggle, ref bNumericHighlight);
+
+            // TODO how to call PropertySet?
+            //ILexer.ilexer4.PropertySet("highlightnumeric", bNumericHighlight);
         }
 
         static void aboutmessage()
