@@ -44,3 +44,8 @@ LexerPlugin/NppManagedPluginDemo/obj/x86/Debug/Demo.dll
 LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/NppPluginNET.Properties.Resources.resources
 LexerPlugin/NppManagedPluginDemo/obj/x64/Debug/NppManagedPluginDemo.csproj.FileListAbsolute.txt
 lexer.png
+/LexerPlugin/NppManagedPluginDemo/*.csproj
+/LexerPlugin/NppManagedPluginDemo/bin
+/LexerPlugin/.vs
+/LexerPlugin/NppManagedPluginDemo/*.user
+/LexerPlugin/NppManagedPluginDemo/obj
