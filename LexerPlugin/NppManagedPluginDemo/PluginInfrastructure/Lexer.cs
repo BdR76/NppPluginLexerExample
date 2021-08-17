@@ -12,7 +12,13 @@ namespace NppPluginNET.PluginInfrastructure
         public static readonly string Name = "EdifactLexer\0";
         public static readonly string StatusText = "My Edifact Lexer example\0";
 
+<<<<<<< HEAD
         //static IScintillaGateway editor = new ScintillaGateway(PluginBase.GetCurrentScintilla());
+=======
+        public static readonly bool HighLightNumeric = false;
+
+        static IScintillaGateway editor = new ScintillaGateway(PluginBase.GetCurrentScintilla());
+>>>>>>> bdf506dcec6e44e402ff20a7099b945bf382c99d
 
         // Keywords
         static List<string> Segs1; // = new List<string> { "UNA", "UNB", "UNH", "UNT", "UNZ", "BGM" };
@@ -29,17 +35,20 @@ namespace NppPluginNET.PluginInfrastructure
         static readonly Dictionary<string, bool> SupportedProperties = new Dictionary<string, bool>
         {
             { "fold", true},
-            { "fold.compact", false}
+            { "fold.compact", false},
+            { "highlightnumeric", false}
         };
         static readonly Dictionary<string, string> PropertyDescription = new Dictionary<string, string>
         {
             { "fold", "Enable or disable the folding functionality."},
-            { "fold.compact", "If set to 0 closing tag is visible when collapsed else hidden." }
+            { "fold.compact", "If set to 0 closing tag is visible when collapsed else hidden." },
+            { "highlightnumeric", "Highlight numeric values in yellow." }
         };
         static readonly Dictionary<string, int> PropertyTypes = new Dictionary<string, int>
         {
             { "fold", (int)SciMsg.SC_TYPE_BOOLEAN},
-            { "fold.compact", (int)SciMsg.SC_TYPE_BOOLEAN }
+            { "fold.compact", (int)SciMsg.SC_TYPE_BOOLEAN },
+            { "highlightnumeric", (int)SciMsg.SC_TYPE_BOOLEAN }
         };
 
         // Styles
@@ -270,8 +279,12 @@ namespace NppPluginNET.PluginInfrastructure
         }
         #endregion ILexer
 
+<<<<<<< HEAD
         static ILexer4 ilexer4 = new ILexer4 { };
         static IntPtr vtable_pointer = IntPtr.Zero;
+=======
+        public static ILexer4 ilexer4 = new ILexer4 { };
+>>>>>>> bdf506dcec6e44e402ff20a7099b945bf382c99d
 
         public static IntPtr ILexerImplementation()
         {
@@ -402,6 +415,45 @@ namespace NppPluginNET.PluginInfrastructure
         }
 
         // virtual void SCI_METHOD Lex(Sci_PositionU startPos, i64 lengthDoc, int initStyle, IDocument *pAccess) = 0;
+        //public static void Lex_old(IntPtr instance, UIntPtr start_pos, IntPtr length_doc, int init_style, IntPtr p_access)
+        //{
+        //    /* main lexing method. 
+        //     * start_pos is always the startposition of a line
+        //     * length_doc is NOT the total length of a document but the size of the text to be styled
+        //     * init_style is the style of last styled byte
+        //     * p_access is the pointer of the IDocument cpp class
+        //     */
+        //    int start = (int)start_pos;
+        //    int length = (int)length_doc;
+        //    IntPtr range_ptr = editor.GetRangePointer(start, length);
+        //    string content = Marshal.PtrToStringAnsi(range_ptr, length);
+        //
+        //    for (int i = 0; i < length; i++)
+        //    {
+        //        int start_position = i;
+        //        string tag = "";
+        //        int idx = 0;
+        //
+        //        if (i + 2 < length) { tag = content.Substring(i, 3); }
+        //
+        //        if (Segs1.Contains(tag)) idx = 3;
+        //        else if (Segs2.Contains(tag)) idx = 5;
+        //        else if (Segs3.Contains(tag)) idx = 6;
+        //        else if (Segs4.Contains(tag)) idx = 7;
+        //
+        //        while (i < length)
+        //        {
+        //            // read rest of the line
+        //            if (content[i] == '\n') { break; }
+        //            i++;
+        //        }
+        //        // style this line
+        //        editor.StartStyling(start + start_position, 0);
+        //        editor.SetStyling(i - start_position, idx);
+        //    }
+        //}
+
+        // virtual void SCI_METHOD Lex(Sci_PositionU startPos, i64 lengthDoc, int initStyle, IDocument *pAccess) = 0;
         public static void Lex(IntPtr instance, UIntPtr start_pos, IntPtr length_doc, int init_style, IntPtr p_access)
         {
             /* main lexing method. 
@@ -431,21 +483,60 @@ namespace NppPluginNET.PluginInfrastructure
             string content = Marshal.PtrToStringAnsi(buffer_ptr, length);
 
 
+            bool bHighlight = SupportedProperties["highlightnumeric"];
+
             for (int i = 0; i < length; i++)
             {
                 int start_position = i;
                 string tag = "";
                 int idx = 0;
+                bool num = false;
+                bool dot = false;
+                int start_num = -1;
 
                 if (i + 2 < length) { tag = content.Substring(i, 3); }
 
-                if (Segs1.Contains(tag)) idx = 3;
-                else if (Segs2.Contains(tag)) idx = 5;
-                else if (Segs3.Contains(tag)) idx = 6;
-                else if (Segs4.Contains(tag)) idx = 7;
+                if (Segs1.Contains(tag)) idx = 1;
+                else if (Segs2.Contains(tag)) idx = 2;
+                else if (Segs3.Contains(tag)) idx = 3;
+                else if (Segs4.Contains(tag)) idx = 4;
 
                 while (i < length)
                 {
+                    // highlight numeric values
+                    if (bHighlight)
+                    {
+                        if (num && (content[i] == '.'))
+                        {
+                            dot = true;
+                        }
+                        else if (!num && (content[i] >= '0') && (content[i] <= '9'))
+                        {
+                            num = true;
+                            start_num = i;
+                        }
+                        else if ((content[i] < '0') || (content[i] > '9'))
+                        {
+
+                            if (num && dot)
+                            {
+                                // style up until numeric
+                                editor.StartStyling(start + start_position, 0);
+                                editor.SetStyling(start_num - start_position, idx);
+
+                                // style numeric
+                                editor.StartStyling(start + start_num, 0);
+                                editor.SetStyling(i - start_num, 9); // 9 = highlist numeric
+
+                                // new start position after numeric
+                                start_position = i;
+                            }
+
+                            // reset
+                            num = false;
+                            dot = false;
+                        }
+                    }
                     // read rest of the line
                     if (content[i] == '\n') { break; }
                     i++;

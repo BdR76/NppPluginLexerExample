@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Kbg.NppPluginNET.PluginInfrastructure;
 using static Kbg.NppPluginNET.PluginInfrastructure.Win32;
+using Kbg.NppPluginNET;
+using NppPluginNET.PluginInfrastructure;
 
 namespace Kbg.NppPluginNET
 {
@@ -36,10 +38,10 @@ namespace Kbg.NppPluginNET
 
         public static void OnNotification(ScNotification notification)
         {
-            if (notification.Header.Code == (uint)SciMsg.SCN_CHARADDED)
-            {
-                Kbg.Demo.Namespace.Main.doInsertHtmlCloseTag((char)notification.Character);
-            }
+            //if (notification.Header.Code == (uint)SciMsg.SCN_CHARADDED)
+            //{
+            //    Kbg.Demo.Namespace.Main.doInsertHtmlCloseTag((char)notification.Character);
+            //}
         }
 
         internal static string PluginName { get { return Kbg.Demo.Namespace.Main.PluginName; }}
@@ -54,16 +56,18 @@ namespace Kbg.Demo.Namespace
         internal const string PluginName = "EdifactLexer";
         static string iniFilePath = null;
         static string sectionName = "Insert Extension";
-        static string keyName = "doCloseTag";
-        static bool doCloseTag = false;
+        static string keyName = "NumericHighlight";
+        static bool bNumericHighlight = false;
         static string sessionFilePath = @"C:\text.session";
         static frmLexerSettings frmLexerSettings = null;
+        static internal int idToggle = -1;
         static internal int idFrmLexer = -1;
         static Bitmap tbBmp = Properties.Resources.lexer;
         static Bitmap tbBmp_tbTab = Properties.Resources.lexer_bmp;
         static Icon tbIcon = null;
         static IScintillaGateway editor = new ScintillaGateway(PluginBase.GetCurrentScintilla());
         static INotepadPPGateway notepad = new NotepadPPGateway();
+        
         #endregion
 
         #region " Startup/CleanUp "
@@ -92,7 +96,7 @@ namespace Kbg.Demo.Namespace
             iniFilePath = Path.Combine(iniFilePath, PluginName + ".ini");
 
             // get the parameter value from plugin config
-            doCloseTag = (Win32.GetPrivateProfileInt(sectionName, keyName, 0, iniFilePath) != 0);
+            bNumericHighlight = (Win32.GetPrivateProfileInt(sectionName, keyName, 0, iniFilePath) != 0);
 
             // with function :
             // SetCommand(int index,                            // zero based number to indicate the order of command
@@ -101,50 +105,17 @@ namespace Kbg.Demo.Namespace
             //            ShortcutKey *shortcut,                // optional. Define a shortcut to trigger this command
             //            bool check0nInit                      // optional. Make this menu item be checked visually
             //            );
-            PluginBase.SetCommand(0, "Hello Notepad++", hello);
-            PluginBase.SetCommand(1, "Hello (with FX)", helloFX);
-            PluginBase.SetCommand(2, "What is Notepad++?", WhatIsNpp);
+            PluginBase.SetCommand(0, "Hello Notepad++", DummyEDIfile);
+            PluginBase.SetCommand(1, "Highlight numeric values", ToggleMenuItem1, bNumericHighlight); ; idToggle = 1;
+
+            PluginBase.SetCommand(2, "Dockable Dialog Demo", DockableDlgDemo); idFrmLexer = 2;
 
             // Here you insert a separator
             PluginBase.SetCommand(3, "---", null);
 
             // Shortcut :
             // Following makes the command bind to the shortcut Alt-F
-            PluginBase.SetCommand(4, "Current Full Path", insertCurrentFullPath, new ShortcutKey(false, true, false, Keys.F));
-            PluginBase.SetCommand(5, "Current File Name", insertCurrentFileName);
-            PluginBase.SetCommand(6, "Current Directory", insertCurrentDirectory);
-            PluginBase.SetCommand(7, "Date && Time - short format", insertShortDateTime);
-            PluginBase.SetCommand(8, "Date && Time - long format", insertLongDateTime);
-
-            PluginBase.SetCommand(9, "Close HTML/XML tag automatically", checkInsertHtmlCloseTag, new ShortcutKey(false, true, false, Keys.Q), doCloseTag);
-
-            PluginBase.SetCommand(10, "---", null);
-
-            PluginBase.SetCommand(11, "Get File Names Demo", getFileNamesDemo);
-            PluginBase.SetCommand(12, "Get Session File Names Demo", getSessionFileNamesDemo);
-            PluginBase.SetCommand(13, "Save Current Session Demo", saveCurrentSessionDemo);
-
-            PluginBase.SetCommand(14, "---", null);
-
-            PluginBase.SetCommand(15, "Dockable Dialog Demo", DockableDlgDemo); idFrmLexer = 15;
-
-            PluginBase.SetCommand(16, "---", null);
-
-            PluginBase.SetCommand(17, "Print Scroll and Row Information", PrintScrollInformation);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        static void PrintScrollInformation()
-        {
-            ScrollInfo scrollInfo = editor.GetScrollInfo(ScrollInfoMask.SIF_RANGE | ScrollInfoMask.SIF_TRACKPOS | ScrollInfoMask.SIF_PAGE, ScrollInfoBar.SB_VERT);
-            var scrollRatio = (double)scrollInfo.nTrackPos / (scrollInfo.nMax - scrollInfo.nPage);
-            var scrollPercentage = Math.Min(scrollRatio, 1) * 100;
-            editor.ReplaceSel($@"The maximum row in the current document was {scrollInfo.nMax+1}.
-A maximum of {scrollInfo.nPage} rows is visible at a time.
-The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
-");
+            PluginBase.SetCommand(4, "About", aboutmessage);
         }
 
         static internal void SetToolBarIcon()
@@ -159,220 +130,35 @@ The current scroll ratio is {Math.Round(scrollPercentage, 2)}%.
 
         static internal void PluginCleanUp()
         {
-            Win32.WritePrivateProfileString(sectionName, keyName, doCloseTag ? "1" : "0", iniFilePath);
+            Win32.WritePrivateProfileString(sectionName, keyName, bNumericHighlight ? "1" : "0", iniFilePath);
         }
         #endregion
 
         #region " Menu functions "
-        static void hello()
+        static void DummyEDIfile()
         {
             notepad.FileNew();
             editor.SetText("Hello, Notepad++...from.NET!");
             var rest = editor.GetLine(0);
-            editor.SetText(rest+rest+rest);
+            editor.SetText(rest + rest + rest);
         }
 
-        static void helloFX()
+        static void ToggleMenuItem1()
         {
-            hello();
-            new Thread(callbackHelloFX).Start();
+            //Debug.WriteLine("ToggleMenuItem1()");
+
+            //PluginBase.ToggleMenuItem(menuitems.menuitemToggleCheckXML, bNumericHighlight);
+            PluginBase.ToggleMenuItem(idToggle, ref bNumericHighlight);
+
+            // TODO how to call PropertySet?
+            //ILexer.ilexer4.PropertySet("highlightnumeric", bNumericHighlight);
         }
 
-        static void callbackHelloFX()
+        static void aboutmessage()
         {
-            int currentZoomLevel = editor.GetZoom();
-            int i = currentZoomLevel;
-            for (int j = 0 ; j < 4 ; j++)
-            {    
-                for ( ; i >= -10; i--)
-                {
-                    editor.SetZoom(i);
-                    Thread.Sleep(30);
-                }
-                Thread.Sleep(100);
-                for ( ; i <= 20 ; i++)
-                {
-                    Thread.Sleep(30);
-                    editor.SetZoom(i);
-                }
-                Thread.Sleep(100);
-            }
-            for ( ; i >= currentZoomLevel ; i--)
-            {
-                Thread.Sleep(30);
-                editor.SetZoom(i);
-            }
-        }
-
-        static void WhatIsNpp()
-        {
-            string text2display = "Notepad++ is a free (as in \"free speech\" and also as in \"free beer\") " +
-                "source code editor and Notepad replacement that supports several languages.\n" +
-                "Running in the MS Windows environment, its use is governed by GPL License.\n\n" +
-                "Based on a powerful editing component Scintilla, Notepad++ is written in C++ and " +
-                "uses pure Win32 API and STL which ensures a higher execution speed and smaller program size.\n" +
-                "By optimizing as many routines as possible without losing user friendliness, Notepad++ is trying " +
-                "to reduce the world carbon dioxide emissions. When using less CPU power, the PC can throttle down " +
-                "and reduce power consumption, resulting in a greener environment.";
-            new Thread(new ParameterizedThreadStart(callbackWhatIsNpp)).Start(text2display);
-        }
-
-        static void callbackWhatIsNpp(object data)
-        {
-            string text2display = (string)data;
-            notepad.FileNew();
-
-            Random srand = new Random(DateTime.Now.Millisecond);
-            int rangeMin = 0;
-            int rangeMax = 250;
-            for (int i = 0; i < text2display.Length; i++)
-            {
-                Thread.Sleep(srand.Next(rangeMin, rangeMax) + 30);
-                editor.AppendTextAndMoveCursor(text2display[i].ToString());
-            }
-        }
-
-        static void insertCurrentFullPath()
-        {
-            insertCurrentPath(NppMsg.FULL_CURRENT_PATH);
-        }
-        static void insertCurrentFileName()
-        {
-            insertCurrentPath(NppMsg.FILE_NAME);
-        }
-        static void insertCurrentDirectory()
-        {
-            insertCurrentPath(NppMsg.CURRENT_DIRECTORY);
-        }
-        static void insertCurrentPath(NppMsg which)
-        {
-            NppMsg msg = NppMsg.NPPM_GETFULLCURRENTPATH;
-            if (which == NppMsg.FILE_NAME)
-                msg = NppMsg.NPPM_GETFILENAME;
-            else if (which == NppMsg.CURRENT_DIRECTORY)
-                msg = NppMsg.NPPM_GETCURRENTDIRECTORY;
-
-            StringBuilder path = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) msg, 0, path);
-
-            editor.ReplaceSel(path.ToString());
-        }
-
-        static void insertShortDateTime()
-        {
-            insertDateTime(false);
-        }
-        static void insertLongDateTime()
-        {
-            insertDateTime(true);
-        }
-        static void insertDateTime(bool longFormat)
-        {
-            string dateTime = string.Format("{0} {1}", DateTime.Now.ToShortTimeString(), longFormat ? DateTime.Now.ToLongDateString() : DateTime.Now.ToShortDateString());
-            editor.ReplaceSel(dateTime);
-        }
-
-        static void checkInsertHtmlCloseTag()
-        {
-            doCloseTag = !doCloseTag;
-
-            int i = Win32.CheckMenuItem(Win32.GetMenu(PluginBase.nppData._nppHandle), PluginBase._funcItems.Items[9]._cmdID,
-                Win32.MF_BYCOMMAND | (doCloseTag ? Win32.MF_CHECKED : Win32.MF_UNCHECKED));
-        }
-
-        static Regex regex = new Regex(@"[\._\-:\w]", RegexOptions.Compiled);
-
-        static internal void doInsertHtmlCloseTag(char newChar)
-        {
-            LangType docType = LangType.L_TEXT;
-            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETCURRENTLANGTYPE, 0, ref docType);
-            bool isDocTypeHTML = (docType == LangType.L_HTML || docType == LangType.L_XML || docType == LangType.L_PHP);
-
-            if (!doCloseTag || !isDocTypeHTML)
-                return;
-
-            if (newChar != '>')
-                return;
-
-            int bufCapacity = 512;
-            var pos = editor.GetCurrentPos();
-            int currentPos = pos;
-            int beginPos = currentPos - (bufCapacity - 1);
-            int startPos = (beginPos > 0) ? beginPos : 0;
-            int size = currentPos - startPos;
-
-            if (size < 3)
-                return;
-
-            using (TextRange tr = new TextRange(startPos, currentPos, bufCapacity))
-            {
-                editor.GetTextRange(tr);
-                string buf = tr.lpstrText;
-
-                if (buf[size - 2] == '/')
-                    return;
-
-                int pCur = size - 2;
-                while ((pCur > 0) && (buf[pCur] != '<') && (buf[pCur] != '>'))
-                    pCur--;
-
-                if (buf[pCur] == '<')
-                {
-                    pCur++;
-
-                    var insertString = new StringBuilder("</");
-
-                    while (regex.IsMatch(buf[pCur].ToString()))
-                    {
-                        insertString.Append(buf[pCur]);
-                        pCur++;
-                    }
-                    insertString.Append('>');
-
-                    if (insertString.Length > 3)
-                    {
-                        editor.BeginUndoAction();
-                        editor.ReplaceSel(insertString.ToString());
-                        editor.SetSel(pos, pos);
-                        editor.EndUndoAction();
-                    }
-                }
-            }
-        }
-
-        static void getFileNamesDemo()
-        {
-            int nbFile = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETNBOPENFILES, 0, 0);
-            MessageBox.Show(nbFile.ToString(), "Number of opened files:");
-
-            using (ClikeStringArray cStrArray = new ClikeStringArray(nbFile, Win32.MAX_PATH))
-            {
-                if (Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETOPENFILENAMES, cStrArray.NativePointer, nbFile) != IntPtr.Zero)
-                    foreach (string file in cStrArray.ManagedStringsUnicode) MessageBox.Show(file);
-            }
-        }
-        static void getSessionFileNamesDemo()
-        {
-            int nbFile = (int)Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETNBSESSIONFILES, 0, sessionFilePath);
-
-            if (nbFile < 1)
-            {
-                MessageBox.Show("Please modify \"sessionFilePath\" in \"Demo.cs\" in order to point to a valid session file", "Error");
-                return;
-            }
-            MessageBox.Show(nbFile.ToString(), "Number of session files:");
-
-            using (ClikeStringArray cStrArray = new ClikeStringArray(nbFile, Win32.MAX_PATH))
-            {
-                if (Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETSESSIONFILES, cStrArray.NativePointer, sessionFilePath) != IntPtr.Zero)
-                    foreach (string file in cStrArray.ManagedStringsUnicode) MessageBox.Show(file);
-            }
-        }
-        static void saveCurrentSessionDemo()
-        {
-            string sessionPath = Marshal.PtrToStringUni(Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_SAVECURRENTSESSION, 0, sessionFilePath));
-            if (!string.IsNullOrEmpty(sessionPath))
-                MessageBox.Show(sessionPath, "Saved Session File :", MessageBoxButtons.OK);
+            var about = new AboutForm();
+            about.ShowDialog();
+            about.Dispose();
         }
 
         static void DockableDlgDemo()
