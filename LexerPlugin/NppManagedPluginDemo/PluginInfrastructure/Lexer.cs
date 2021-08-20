@@ -411,6 +411,9 @@ namespace NppPluginNET.PluginInfrastructure
             int length = (int)length_doc;
             int start = (int)start_pos;
 
+            //bool bHighlight = SupportedProperties["highlightnumeric"];
+            bool bHighlight = true;
+
             // allocate a buffer
             IntPtr buffer_ptr = Marshal.AllocHGlobal(length);
             if (buffer_ptr == IntPtr.Zero) { return; }
@@ -433,16 +436,53 @@ namespace NppPluginNET.PluginInfrastructure
                 int start_position = i;
                 string tag = "";
                 int idx = 0;
+                bool num = false;
+                bool dot = false;
+                int start_num = -1;
 
                 if (i + 2 < length) { tag = content.Substring(i, 3); }
 
-                if (Segs1.Contains(tag)) idx = 3;
-                else if (Segs2.Contains(tag)) idx = 5;
-                else if (Segs3.Contains(tag)) idx = 6;
-                else if (Segs4.Contains(tag)) idx = 7;
+                if (Segs1.Contains(tag)) idx = 1;
+                else if (Segs2.Contains(tag)) idx = 2;
+                else if (Segs3.Contains(tag)) idx = 3;
+                else if (Segs4.Contains(tag)) idx = 4;
 
                 while (i < length)
                 {
+                    // highlight numeric values
+                    if (bHighlight)
+                    {
+                        if (num && (content[i] == '.'))
+                        {
+                            dot = true;
+                        }
+                        else if (!num && (content[i] >= '0') && (content[i] <= '9'))
+                        {
+                            num = true;
+                            start_num = i;
+                        }
+                        else if ((content[i] < '0') || (content[i] > '9'))
+                        {
+
+                            if (num && dot)
+                            {
+                                // style up until numeric
+                                vtable.StartStyling(p_access, (IntPtr)(start + start_position));
+                                vtable.SetStyleFor(p_access, (IntPtr)(start_num - start_position), (char)idx);
+
+                                // style numeric highlight
+                                vtable.StartStyling(p_access, (IntPtr)(start + start_num));
+                                vtable.SetStyleFor(p_access, (IntPtr)(i - start_num), (char)9); // 9 = highlight numeric
+
+                                // new start position after numeric
+                                start_position = i;
+                            }
+
+                            // reset
+                            num = false;
+                            dot = false;
+                        }
+                    }
                     // read rest of the line
                     if (content[i] == '\n') { break; }
                     i++;
