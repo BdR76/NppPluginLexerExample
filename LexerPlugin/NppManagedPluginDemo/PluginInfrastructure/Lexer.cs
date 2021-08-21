@@ -26,17 +26,20 @@ namespace NppPluginNET.PluginInfrastructure
         static readonly Dictionary<string, bool> SupportedProperties = new Dictionary<string, bool>
         {
             { "fold", true},
-            { "fold.compact", false}
+            { "fold.compact", false},
+            { "highlightnumeric", false}
         };
         static readonly Dictionary<string, string> PropertyDescription = new Dictionary<string, string>
         {
             { "fold", "Enable or disable the folding functionality."},
-            { "fold.compact", "If set to 0 closing tag is visible when collapsed else hidden." }
+            { "fold.compact", "If set to 0 closing tag is visible when collapsed else hidden." },
+            { "highlightnumeric", "Highlight numeric values." }
         };
         static readonly Dictionary<string, int> PropertyTypes = new Dictionary<string, int>
         {
             { "fold", (int)SciMsg.SC_TYPE_BOOLEAN},
-            { "fold.compact", (int)SciMsg.SC_TYPE_BOOLEAN }
+            { "fold.compact", (int)SciMsg.SC_TYPE_BOOLEAN },
+            { "highlightnumeric", (int)SciMsg.SC_TYPE_BOOLEAN }
         };
 
         // Styles
@@ -411,8 +414,8 @@ namespace NppPluginNET.PluginInfrastructure
             int length = (int)length_doc;
             int start = (int)start_pos;
 
-            //bool bHighlight = SupportedProperties["highlightnumeric"];
-            bool bHighlight = true;
+            bool bHighlight = SupportedProperties["highlightnumeric"];
+            //bool bHighlight = true;
 
             // allocate a buffer
             IntPtr buffer_ptr = Marshal.AllocHGlobal(length);

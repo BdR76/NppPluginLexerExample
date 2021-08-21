@@ -67,7 +67,7 @@ namespace Kbg.Demo.Namespace
         static Icon tbIcon = null;
         static IScintillaGateway editor = new ScintillaGateway(PluginBase.GetCurrentScintilla());
         static INotepadPPGateway notepad = new NotepadPPGateway();
-        
+
         #endregion
 
         #region " Startup/CleanUp "
@@ -76,14 +76,14 @@ namespace Kbg.Demo.Namespace
         {
             // Initialization of your plugin commands
             // You should fill your plugins commands here
- 
+
             //
             // Firstly we get the parameters from your plugin config file (if any)
             //
 
             // get path of plugin configuration
             StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
             iniFilePath = sbIniFilePath.ToString();
 
             // if config path doesn't exist, we create it
@@ -106,7 +106,7 @@ namespace Kbg.Demo.Namespace
             //            bool check0nInit                      // optional. Make this menu item be checked visually
             //            );
             PluginBase.SetCommand(0, "Hello Notepad++", DummyEDIfile);
-            PluginBase.SetCommand(1, "Highlight numeric values", ToggleMenuItem1, bNumericHighlight); ; idToggle = 1;
+            PluginBase.SetCommand(1, "Highlight numeric values", ToggleMenuItem1, false); idToggle = 1;
 
             PluginBase.SetCommand(2, "Dockable Dialog Demo", DockableDlgDemo); idFrmLexer = 2;
 
@@ -116,6 +116,11 @@ namespace Kbg.Demo.Namespace
             // Shortcut :
             // Following makes the command bind to the shortcut Alt-F
             PluginBase.SetCommand(4, "About", aboutmessage);
+
+            // 
+            if (bNumericHighlight) {
+                ToggleMenuItem1();
+            };
         }
 
         static internal void SetToolBarIcon()
@@ -145,13 +150,14 @@ namespace Kbg.Demo.Namespace
 
         static void ToggleMenuItem1()
         {
-            //Debug.WriteLine("ToggleMenuItem1()");
-
             //PluginBase.ToggleMenuItem(menuitems.menuitemToggleCheckXML, bNumericHighlight);
             PluginBase.ToggleMenuItem(idToggle, ref bNumericHighlight);
 
-            // TODO how to call PropertySet?
-            //ILexer.ilexer4.PropertySet("highlightnumeric", bNumericHighlight);
+            // call set property should dtrigger re-draw of lexer
+            editor.SetProperty("highlightnumeric", (bNumericHighlight ? "1" : "0"));
+
+            // TODO: the lexer is not immediately refreshed?
+            //editor.SetFocus(true);
         }
 
         static void aboutmessage()
